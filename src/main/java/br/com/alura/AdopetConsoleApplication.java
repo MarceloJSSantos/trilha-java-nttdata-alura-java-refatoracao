@@ -75,10 +75,7 @@ public class AdopetConsoleApplication {
         System.out.println("Digite o email do abrigo:");
         String email = new Scanner(System.in).nextLine();
 
-        JsonObject json = new JsonObject();
-        json.addProperty("nome", nome);
-        json.addProperty("telefone", telefone);
-        json.addProperty("email", email);
+        JsonObject json = getJsonObjectCadastraNovoAbrigo(nome, telefone, email);
 
         HttpClient client = HttpClient.newHttpClient();
         String uri = "http://localhost:8080/abrigos";
@@ -120,7 +117,7 @@ public class AdopetConsoleApplication {
         }
     }
 
-    private static void importaPetsDeUmAbrigo() throws IOException, InterruptedException {
+    private static void importaPetsDeUmAbrigo() throws InterruptedException {
         System.out.println("Digite o id ou nome do abrigo:");
         String idOuNome = new Scanner(System.in).nextLine();
 
@@ -135,18 +132,7 @@ public class AdopetConsoleApplication {
                 String[] campos = line.split(",");
                 String tipo = campos[0];
                 String nome = campos[1];
-                String raca = campos[2];
-                int idade = Integer.parseInt(campos[3]);
-                String cor = campos[4];
-                Float peso = Float.parseFloat(campos[5]);
-
-                JsonObject json = new JsonObject();
-                json.addProperty("tipo", tipo.toUpperCase());
-                json.addProperty("nome", nome);
-                json.addProperty("raca", raca);
-                json.addProperty("idade", idade);
-                json.addProperty("cor", cor);
-                json.addProperty("peso", peso);
+                JsonObject json = getJsonObjectImportaPetsDeUmAbrigo(campos, tipo, nome);
 
                 HttpClient client = HttpClient.newHttpClient();
                 String uri = "http://localhost:8080/abrigos/" + idOuNome + "/pets";
@@ -186,6 +172,30 @@ public class AdopetConsoleApplication {
                 .build();
 
         return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    private static JsonObject getJsonObjectCadastraNovoAbrigo(String nome, String telefone, String email) {
+        JsonObject json = new JsonObject();
+        json.addProperty("nome", nome);
+        json.addProperty("telefone", telefone);
+        json.addProperty("email", email);
+        return json;
+    }
+
+    private static JsonObject getJsonObjectImportaPetsDeUmAbrigo(String[] campos, String tipo, String nome) {
+        String raca = campos[2];
+        int idade = Integer.parseInt(campos[3]);
+        String cor = campos[4];
+        Float peso = Float.parseFloat(campos[5]);
+
+        JsonObject json = new JsonObject();
+        json.addProperty("tipo", tipo.toUpperCase());
+        json.addProperty("nome", nome);
+        json.addProperty("raca", raca);
+        json.addProperty("idade", idade);
+        json.addProperty("cor", cor);
+        json.addProperty("peso", peso);
+        return json;
     }
 
 }
