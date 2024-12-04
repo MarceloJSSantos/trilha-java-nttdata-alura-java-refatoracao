@@ -130,9 +130,8 @@ public class AdopetConsoleApplication {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] campos = line.split(",");
-                String tipo = campos[0];
                 String nome = campos[1];
-                JsonObject json = getJsonObjectImportaPetsDeUmAbrigo(campos, tipo, nome);
+                JsonObject json = getJsonObjectImportaPetsDeUmAbrigo(campos);
 
                 HttpClient client = HttpClient.newHttpClient();
                 String uri = "http://localhost:8080/abrigos/" + idOuNome + "/pets";
@@ -182,7 +181,9 @@ public class AdopetConsoleApplication {
         return json;
     }
 
-    private static JsonObject getJsonObjectImportaPetsDeUmAbrigo(String[] campos, String tipo, String nome) {
+    private static JsonObject getJsonObjectImportaPetsDeUmAbrigo(String[] campos) {
+        String tipo = campos[0];
+        String nome = campos[1];
         String raca = campos[2];
         int idade = Integer.parseInt(campos[3]);
         String cor = campos[4];
