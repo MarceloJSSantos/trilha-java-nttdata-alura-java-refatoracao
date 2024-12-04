@@ -1,6 +1,7 @@
 package br.com.alura.service;
 
 import br.com.alura.client.ClientHttpConfiguration;
+import br.com.alura.utils.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -15,9 +16,11 @@ import java.util.Scanner;
 public class PetService {
 
     private ClientHttpConfiguration client;
+    private JsonUtils jsonUtils;
 
-    public PetService(ClientHttpConfiguration client) {
+    public PetService(ClientHttpConfiguration client, JsonUtils jsonUtils) {
         this.client = client;
+        this.jsonUtils = jsonUtils;
     }
 
     public void listaPetsDeUmAbrigo() throws IOException, InterruptedException {
@@ -59,7 +62,7 @@ public class PetService {
             while ((line = reader.readLine()) != null) {
                 String[] campos = line.split(",");
                 String nome = campos[1];
-                JsonObject json = getJsonObjectImportaPetsDeUmAbrigo(campos);
+                JsonObject json = jsonUtils.getJsonObject(campos);
 
                 String uri = "http://localhost:8080/abrigos/" + idOuNome + "/pets";
                 HttpResponse<String> response = client.disparaRequisicaoPost(uri, json);
@@ -80,23 +83,5 @@ public class PetService {
         } catch (IOException e) {
             System.out.println("Erro ao carregar o arquivo: " +nomeArquivo);
         }
-    }
-
-    private JsonObject getJsonObjectImportaPetsDeUmAbrigo(String[] campos) {
-        String tipo = campos[0];
-        String nome = campos[1];
-        String raca = campos[2];
-        int idade = Integer.parseInt(campos[3]);
-        String cor = campos[4];
-        Float peso = Float.parseFloat(campos[5]);
-
-        JsonObject json = new JsonObject();
-        json.addProperty("tipo", tipo.toUpperCase());
-        json.addProperty("nome", nome);
-        json.addProperty("raca", raca);
-        json.addProperty("idade", idade);
-        json.addProperty("cor", cor);
-        json.addProperty("peso", peso);
-        return json;
     }
 }

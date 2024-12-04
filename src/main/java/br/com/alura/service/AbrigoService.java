@@ -1,6 +1,7 @@
 package br.com.alura.service;
 
 import br.com.alura.client.ClientHttpConfiguration;
+import br.com.alura.utils.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,9 +14,11 @@ import java.util.Scanner;
 public class AbrigoService {
 
     private ClientHttpConfiguration client;
+    private JsonUtils jsonUtils;
 
-    public AbrigoService(ClientHttpConfiguration client) {
+    public AbrigoService(ClientHttpConfiguration client, JsonUtils jsonUtils) {
         this.client = client;
+        this.jsonUtils = jsonUtils;
     }
 
     public void listaAbrigos() throws IOException, InterruptedException {
@@ -40,7 +43,7 @@ public class AbrigoService {
         System.out.println("Digite o email do abrigo:");
         String email = new Scanner(System.in).nextLine();
 
-        JsonObject json = getJsonObjectCadastraNovoAbrigo(nome, telefone, email);
+        JsonObject json = jsonUtils.getJsonObject(nome, telefone, email);
 
         String uri = "http://localhost:8080/abrigos";
         HttpResponse<String> response = client.disparaRequisicaoPost(uri, json);
@@ -53,13 +56,5 @@ public class AbrigoService {
             System.out.println("Erro ao cadastrar o abrigo:");
             System.out.println(responseBody);
         }
-    }
-
-    private static JsonObject getJsonObjectCadastraNovoAbrigo(String nome, String telefone, String email) {
-        JsonObject json = new JsonObject();
-        json.addProperty("nome", nome);
-        json.addProperty("telefone", telefone);
-        json.addProperty("email", email);
-        return json;
     }
 }
