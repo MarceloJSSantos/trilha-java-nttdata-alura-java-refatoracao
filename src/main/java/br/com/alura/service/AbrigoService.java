@@ -1,37 +1,36 @@
 package br.com.alura.service;
 
 import br.com.alura.client.ClientHttpConfiguration;
-import br.com.alura.utils.JsonUtils;
-import com.google.gson.JsonArray;
+import br.com.alura.model.Abrigo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class AbrigoService {
 
     private ClientHttpConfiguration client;
-    private JsonUtils jsonUtils;
 
-    public AbrigoService(ClientHttpConfiguration client, JsonUtils jsonUtils) {
+    public AbrigoService(ClientHttpConfiguration client) {
         this.client = client;
-        this.jsonUtils = jsonUtils;
     }
 
     public void listaAbrigos() throws IOException, InterruptedException {
         String uri = "http://localhost:8080/abrigos";
         HttpResponse<String> response = client.disparaRequisicaoGet(uri);
         String responseBody = response.body();
-        JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
+        var abrigoArray = new ObjectMapper().readValue(responseBody, Abrigo[].class);
+        var abrigoList = Arrays.stream(abrigoArray).toList();
         System.out.println("Abrigos cadastrados:");
-        for (JsonElement element : jsonArray) {
-            JsonObject jsonObject = element.getAsJsonObject();
-            long id = jsonObject.get("id").getAsLong();
-            String nome = jsonObject.get("nome").getAsString();
-            System.out.println(id +" - " +nome);
+        for (Abrigo abrigo : abrigoList) {
+            long id = abrigo.getId();
+            String nome = abrigo.getNome();
+            System.out.println(id + " - " + nome);
         }
     }
 
@@ -43,10 +42,10 @@ public class AbrigoService {
         System.out.println("Digite o email do abrigo:");
         String email = new Scanner(System.in).nextLine();
 
-        JsonObject json = jsonUtils.getJsonObject(nome, telefone, email);
+        var abrigo = new Abrigo(nome, telefone, email);
 
         String uri = "http://localhost:8080/abrigos";
-        HttpResponse<String> response = client.disparaRequisicaoPost(uri, json);
+        HttpResponse<String> response = client.disparaRequisicaoPost(uri, abrigo);
         int statusCode = response.statusCode();
         String responseBody = response.body();
         if (statusCode == 200) {

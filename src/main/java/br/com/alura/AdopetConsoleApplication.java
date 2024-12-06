@@ -3,7 +3,6 @@ package br.com.alura;
 import br.com.alura.client.ClientHttpConfiguration;
 import br.com.alura.service.AbrigoService;
 import br.com.alura.service.PetService;
-import br.com.alura.utils.JsonUtils;
 
 import java.util.Scanner;
 
@@ -12,9 +11,8 @@ public class AdopetConsoleApplication {
     public static void main(String[] args) {
 
         var client = new ClientHttpConfiguration();
-        var json = new JsonUtils();
-        var abrigoService = new AbrigoService(client, json);
-        var petService = new PetService(client, json);
+        var abrigoService = new AbrigoService(client);
+        var petService = new PetService(client);
 
         System.out.println("##### BOAS VINDAS AO SISTEMA ADOPET CONSOLE #####");
         try {
