@@ -3,9 +3,6 @@ package br.com.alura.service;
 import br.com.alura.client.ClientHttpConfiguration;
 import br.com.alura.model.Abrigo;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -14,7 +11,7 @@ import java.util.Scanner;
 
 public class AbrigoService {
 
-    private ClientHttpConfiguration client;
+    private final ClientHttpConfiguration client;
 
     public AbrigoService(ClientHttpConfiguration client) {
         this.client = client;

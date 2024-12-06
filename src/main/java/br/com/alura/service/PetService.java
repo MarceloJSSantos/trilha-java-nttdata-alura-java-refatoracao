@@ -1,13 +1,8 @@
 package br.com.alura.service;
 
 import br.com.alura.client.ClientHttpConfiguration;
-import br.com.alura.model.Abrigo;
 import br.com.alura.model.Pet;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,7 +13,7 @@ import java.util.Scanner;
 
 public class PetService {
 
-    private ClientHttpConfiguration client;
+    private final ClientHttpConfiguration client;
 
     public PetService(ClientHttpConfiguration client) {
         this.client = client;
@@ -57,7 +52,7 @@ public class PetService {
         System.out.println("Digite o nome do arquivo CSV:");
         String nomeArquivo = new Scanner(System.in).nextLine();
 
-        BufferedReader reader = null;
+        BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(nomeArquivo));
             String line;
