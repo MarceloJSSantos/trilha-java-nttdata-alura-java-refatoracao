@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class AbrigoService {
@@ -23,11 +24,10 @@ public class AbrigoService {
         String responseBody = response.body();
         var abrigoArray = new ObjectMapper().readValue(responseBody, Abrigo[].class);
         var abrigoList = Arrays.stream(abrigoArray).toList();
-        System.out.println("Abrigos cadastrados:");
-        for (Abrigo abrigo : abrigoList) {
-            long id = abrigo.getId();
-            String nome = abrigo.getNome();
-            System.out.println(id + " - " + nome);
+        if(abrigoList.isEmpty()){
+            System.out.println("Não há abrigos cadastrados");
+        } else{
+            mostraAbrigos(abrigoList);
         }
     }
 
@@ -51,6 +51,15 @@ public class AbrigoService {
         } else if (statusCode == 400 || statusCode == 500) {
             System.out.println("Erro ao cadastrar o abrigo:");
             System.out.println(responseBody);
+        }
+    }
+
+    private void mostraAbrigos(List<Abrigo> abrigos){
+        System.out.println("Abrigos cadastrados:");
+        for (Abrigo abrigo : abrigos) {
+            long id = abrigo.getId();
+            String nome = abrigo.getNome();
+            System.out.println(id + " - " + nome);
         }
     }
 }

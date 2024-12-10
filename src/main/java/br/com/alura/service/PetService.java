@@ -30,7 +30,6 @@ public class PetService {
             System.out.println("ID ou nome não cadastrado!");
         } else {
             String responseBody = response.body();
-//            JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
             var petArray = new ObjectMapper().readValue(responseBody, Pet[].class);
             var petList = Arrays.stream(petArray).toList();
             System.out.println("Pets cadastrados:");
@@ -46,11 +45,12 @@ public class PetService {
     }
 
     public void importaPetsDeUmAbrigo() throws InterruptedException {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Digite o id ou nome do abrigo:");
-        String idOuNome = new Scanner(System.in).nextLine();
+        String idOuNome = scanner.nextLine();
 
         System.out.println("Digite o nome do arquivo CSV:");
-        String nomeArquivo = new Scanner(System.in).nextLine();
+        String nomeArquivo = scanner.nextLine();
 
         BufferedReader reader;
         try {
